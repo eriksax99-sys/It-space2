@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Space Stockholm AB | Enterprise IT Project Management & Execution</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#090E1A',
+                            slate: '#1E293B',
+                            accent: '#0A58CA',
+                            gold: '#D4AF37'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Georgia', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        .premium-bg {
+            background: radial-gradient(circle at 85% 15%, rgba(10, 88, 202, 0.15) 0%, transparent 45%),
+                        radial-gradient(circle at 15% 85%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+                        #090E1A;
+        }
+    </style>
+</head>
+<body class="bg-white text-slate-900 font-sans antialiased">
+
+    <header class="sticky top-0 z-50 bg-brand-dark/95 backdrop-blur-md border-b border-slate-800 text-white">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <span class="text-xl font-bold tracking-[0.25em] text-white">IT SPACE</span>
+                <span class="h-4 w-[1px] bg-slate-700"></span>
+                <span class="text-xs font-mono tracking-widest text-slate-400 uppercase">Stockholm</span>
+            </div>
+            
+            <nav class="hidden lg:flex items-center space-x-10 text-xs font-semibold tracking-widest uppercase">
+                <a href="#about" class="text-slate-300 hover:text-white transition">The Practice</a>
+                <a href="#capabilities" class="text-slate-300 hover:text-white transition">Capabilities</a>
+                <a href="#clients" class="text-slate-300 hover:text-white transition">Client Portfolio</a>
+                <a href="#engage" class="border border-white px-5 py-2.5 text-white hover:bg-white hover:text-brand-dark transition-all duration-300">
+                    Engage Services
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="premium-bg text-white py-28 px-6 lg:py-40 border-b border-slate-900">
+        <div class="max-w-6xl mx-auto">
+            <span class="text-xs font-mono tracking-widest text-brand-gold uppercase block mb-4">// ENTERPRISE IT DELIVERY</span>
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-light tracking-tight leading-[1.1] mb-8 max-w-5xl">
+                Securing execution. <br>
+                <span class="font-serif italic font-normal text-slate-300">Eliminating operational risk.</span>
+            </h1>
+            <p class="text-lg md:text-xl text-slate-400 max-w-3xl mb-12 font-light leading-relaxed">
+                IT Space Stockholm AB specializes in steering high-stakes corporate IT projects across Europe from concept to robust implementation, turning systemic complexity into predictable operational performance.
+            </p>
+            <div class="flex flex-wrap gap-6">
+                <a href="#capabilities" class="bg-brand-accent text-white text-xs font-semibold tracking-widest uppercase px-8 py-4 hover:bg-blue-700 transition shadow-lg">
+                    Our Capabilities
+                </a>
+                <a href="#clients" class="border border-slate-700 text-white text-xs font-semibold tracking-widest uppercase px-8 py-4 hover:border-white transition">
+                    View Track Record
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-24 px-6 max-w-5xl mx-auto border-b border-gray-100">
+        <span class="text-xs font-mono tracking-widest text-brand-accent uppercase block mb-6">The Practice</span>
+        <blockquote class="font-serif text-2xl md:text-4xl text-slate-800 leading-snug mb-8">
+            “Successful IT implementation isn't just about technical alignment. It is about deploying frameworks that actively reduce client stress, optimize organizational timelines, and protect profitability.”
+        </blockquote>
+        <div class="flex items-center space-x-4">
+            <div class="h-[1px] w-12 bg-brand-gold"></div>
+            <p class="text-sm font-semibold tracking-wide text-slate-600">
+                Erik van Geest — <span class="font-light">Principal Consultant, IT Space Stockholm AB</span>
+            </p>
+        </div>
+    </section>
+
+    <section id="capabilities" class="py-24 px-6 bg-slate-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-16">
+                <span class="text-xs font-mono tracking-widest text-brand-accent uppercase block mb-2">Expertise</span>
+                <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Project Management & Implementation</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <div class="bg-white p-10 border border-gray-200 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <div class="h-[2px] w-12 bg-brand-accent mb-8"></div>
+                        <h3 class="text-xl font-bold tracking-tight mb-4">IT Project Management</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed font-light">
+                            End-to-end orchestration of infrastructure transitions, system integrations, and multi-tier tech rollouts. Built entirely around timelines, resource predictability, and client constraints.
+                        </p>
+                    </div>
+                    <span class="text-xs font-mono text-slate-400 mt-8">01 / DISCIPLINED DELIVERY</span>
+                </div>
+
+                <div class="bg-white p-10 border border-gray-200 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <div class="h-[2px] w-12 bg-brand-gold mb-8"></div>
+                        <h3 class="text-xl font-bold tracking-tight mb-4">Strategic Solutions Architecture</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed font-light">
+                            Transforming complex business problems into clear, executable technical strategies. We focus on modern, scalable architectures that eliminate organizational bottlenecks.
+                        </p>
+                    </div>
+                    <span class="text-xs font-mono text-slate-400 mt-8">02 / PROBLEM REDUCTION</span>
+                </div>
+
+                <div class="bg-white p-10 border border-gray-200 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <div class="h-[2px] w-12 bg-slate-900 mb-8"></div>
+                        <h3 class="text-xl font-bold tracking-tight mb-4">Pan-European Scaling</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed font-light">
+                            With over two decades of deployment experience across European markets, we excel at managing localized complexities and steering cross-border corporate IT objectives.
+                        </p>
+                    </div>
+                    <span class="text-xs font-mono text-slate-400 mt-8">03 / REGIONAL EXPERTISE</span>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="clients" class="py-24 px-6 bg-brand-dark text-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-end mb-16">
+                <div>
+                    <span class="text-xs font-mono tracking-widest text-brand-gold uppercase block mb-2">Proven Impact</span>
+                    <h2 class="text-3xl md:text-4xl font-light tracking-tight">The Ecosystem of Trust</h2>
+                </div>
+                <p class="text-slate-400 font-light max-w-md mt-4 md:mt-0 text-sm leading-relaxed">
+                    Our methodology has successfully protected delivery objectives and framework lifecycles for premier corporate and public organizations across Europe.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 border border-slate-800">
+                <div class="p-8 border-r border-b border-slate-800 text-center font-medium tracking-wider text-slate-300 hover:bg-slate-900/50 transition">IBM</div>
+                <div class="p-8 border-r border-b border-slate-800 text-center font-medium tracking-wider text-slate-300 hover:bg-slate-900/50 transition">Philips</div>
+                <div class="p-8 border-r border-b border-slate-800 text-center font-medium tracking-wider text-slate-300 hover:bg-slate-900/50 transition">Electrolux</div>
+                <div class="p-8 border-b border-slate-800 text-center font-medium tracking-wider text-slate-300 hover:bg-slate-900/50 transition">Scania</div>
+                <div class="p-8 border-r border-b md:border-b-0 border-slate-800 text-center font-medium tracking-wider text-slate-300 hover:bg-slate-900/50 transition">Polisstyrelsen</div>
+                <div class="p-8 border-r border-b md:border-b-0 border-slate-800 text-center font-medium tracking-wider text-slate-300 hover:bg-slate-900/50 transition">Tele2 / T-Mobile</div>
+                <div class="p-8 border-r border-slate-800 text-center font-medium tracking-wider text-slate-300 hover:bg-slate-900/50 transition">Telia</div>
+                <div class="p-8 border-slate-800 text-center font-medium tracking-wider text-slate-300 hover:bg-slate-900/50 transition">NTL</div>
+                <div class="p-8 border-r border-slate-800 text-center font-medium tracking-wider text-slate-300 hover:bg-slate-900/50 transition">Cable & Wireless</div>
+                <div class="p-8 text-center font-medium tracking-wider text-slate-300 hover:bg-slate-900/50 transition col-span-2 md:col-span-3">Reliance Globalcom</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="engage" class="py-24 px-6 bg-slate-50">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-xs font-mono tracking-widest text-brand-accent uppercase block mb-2">Engagement</span>
+                <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Initiate an Executive Briefing</h2>
+                <p class="text-slate-600 font-light mt-4 max-w-xl mx-auto text-sm">
+                    Connect directly with our consulting office regarding upcoming infrastructure frameworks, transformation pipelines, or resource allocation needs.
+                </p>
+            </div>
+
+            <form class="bg-white border border-gray-200 p-10 md:p-12 shadow-sm space-y-8" onsubmit="event.preventDefault(); alert('Consultation request submitted successfully. IT Space Stockholm AB will follow up shortly.');">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <label class="block text-xs font-semibold tracking-wider uppercase text-slate-700 mb-3">Principal Contact Name</label>
+                        <input type="text" required class="w-full border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-accent transition bg-transparent" placeholder="John Doe">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold tracking-wider uppercase text-slate-700 mb-3">Enterprise Email</label>
+                        <input type="email" required class="w-full border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-brand-accent transition bg-transparent" placeholder="j.doe@organisation.se">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold tracking-wider uppercase text-slate-700 mb-3">Project Alignment Requirements</label>
+                    <textarea rows="4" required class="w-full border border-gray-200 p-4 text-sm focus:outline-none focus:border-brand-accent transition bg-slate-50" placeholder="Please outline your technical roadmap timeline, scope, or operational parameters..."></textarea>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="w-full md:w-auto bg-brand-dark text-white text-xs font-semibold tracking-widest uppercase px-10 py-4 hover:bg-brand-accent transition duration-300">
+                        Request Project Consultation
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <footer class="bg-brand-dark text-slate-500 text-xs py-16 px-6 border-t border-slate-900">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+            <div>
+                <p class="text-sm font-bold tracking-widest text-slate-300 uppercase mb-2">IT SPACE STOCKHOLM AB</p>
+                <p class="font-light tracking-wide">Corporate Registry Number: 556909-9905</p>
+                <p class="font-light tracking-wide mt-1">Saltsjö-Boo, Stockholms län, Sweden</p>
+            </div>
+            <div class="md:text-right font-light tracking-wide">
+                <p>&copy; 2026 IT Space Stockholm AB. All rights reserved.</p>
+                <p class="text-slate-600 mt-2 text-[10px] font-mono">DELIVERY | ARCHITECTURE | IMPLEMENTATION</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
