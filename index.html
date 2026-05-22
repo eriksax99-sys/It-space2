@@ -1,160 +1,531 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IT Space Stockholm AB | Enterprise IT Project Management</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            dark: '#060B16',
-                            slate: '#0F172A',
-                            accent: '#0052FF',
-                            gold: '#D4AF37'
-                        }
-                    },
-                    fontFamily: {
-                        serif: ['Georgia', 'serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        html { scroll-behavior: smooth; }
-        .enterprise-grid {
-            background-color: #060B16;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(0, 82, 255, 0.15) 0, transparent 50%), 
-                radial-gradient(at 100% 100%, rgba(212, 175, 55, 0.05) 0, transparent 50%),
-                linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 50px 50px, 50px 50px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NQ30 Watchlist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0a0c0f; --bg2:#111418; --bg3:#181c22;
+    --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
+    --text:#e8eaed; --muted:#6b7280; --dim:#3d4450;
+    --green:#22c55e; --green-bg:rgba(34,197,94,0.1); --green-border:rgba(34,197,94,0.25);
+    --red:#f43f5e; --red-bg:rgba(244,63,94,0.1); --red-border:rgba(244,63,94,0.25);
+    --amber:#f59e0b; --amber-bg:rgba(245,158,11,0.1); --amber-border:rgba(245,158,11,0.35);
+    --blue:#3b82f6; --blue-bg:rgba(59,130,246,0.1); --blue-border:rgba(59,130,246,0.3);
+    --accent:#00d4aa; --accent2:#0af0c4;
+    --mono:'IBM Plex Mono',monospace; --sans:'DM Sans',sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;min-height:100vh;line-height:1.5;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,170,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,170,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+  .container{max-width:1340px;margin:0 auto;padding:0 24px 60px;position:relative;z-index:1;}
+
+  header{display:flex;align-items:flex-end;justify-content:space-between;padding:36px 0 28px;border-bottom:1px solid var(--border);gap:20px;flex-wrap:wrap;}
+  .logo{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.15em;color:var(--accent);text-transform:uppercase;margin-bottom:6px;}
+  h1{font-family:var(--mono);font-size:28px;font-weight:600;letter-spacing:-0.02em;}
+  h1 span{color:var(--accent);}
+  .header-meta{font-size:12px;color:var(--muted);margin-top:6px;font-family:var(--mono);}
+  .header-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .api-setup{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;}
+  .api-setup label{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap;}
+  .api-setup input{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--mono);font-size:12px;padding:5px 10px;width:200px;outline:none;transition:border-color 0.2s;}
+  .api-setup input:focus{border-color:var(--accent);}
+  .api-setup input::placeholder{color:var(--dim);}
+  .btn-refresh{background:var(--accent);color:#000;border:none;border-radius:6px;font-family:var(--mono);font-size:12px;font-weight:600;padding:7px 16px;cursor:pointer;transition:all 0.15s;white-space:nowrap;display:flex;align-items:center;gap:6px;}
+  .btn-refresh:hover{background:var(--accent2);transform:translateY(-1px);}
+  .btn-refresh:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+  .spin{animation:spin 1s linear infinite;display:inline-block;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .status-bar{display:flex;align-items:center;gap:8px;padding:10px 0;font-family:var(--mono);font-size:11px;color:var(--muted);border-bottom:1px solid var(--border);}
+  .status-dot{width:6px;height:6px;border-radius:50%;background:var(--dim);flex-shrink:0;}
+  .status-dot.live{background:var(--green);box-shadow:0 0 6px var(--green);animation:pulse 2s infinite;}
+  .status-dot.error{background:var(--red);}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+
+  /* LEGEND */
+  .legend{display:flex;gap:24px;padding:14px 0 6px;flex-wrap:wrap;border-bottom:1px solid var(--border);}
+  .legend-group{display:flex;align-items:center;gap:10px;}
+  .legend-title{font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dim);margin-right:2px;}
+  .legend-item{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;color:var(--muted);}
+  .legend-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+
+  .summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;padding:16px 0;}
+  .sum-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+  .sum-card.green{border-color:var(--green-border);background:var(--green-bg);}
+  .sum-card.red{border-color:var(--red-border);background:var(--red-bg);}
+  .sum-label{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+  .sum-val{font-family:var(--mono);font-size:22px;font-weight:600;}
+  .sum-val.green{color:var(--green);}
+  .sum-val.red{color:var(--red);}
+  .sum-val.amber{color:var(--amber);}
+  .sum-sub{font-size:11px;color:var(--muted);margin-top:2px;font-family:var(--mono);}
+
+  .controls{display:flex;align-items:center;gap:8px;padding:12px 0;flex-wrap:wrap;}
+  .filter-btn{background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-family:var(--mono);font-size:11px;padding:5px 12px;cursor:pointer;transition:all 0.15s;letter-spacing:0.05em;}
+  .filter-btn:hover{border-color:var(--border2);color:var(--text);}
+  .filter-btn.active{background:var(--accent);border-color:var(--accent);color:#000;font-weight:600;}
+  .filter-btn.active-bull{background:var(--green-bg);border-color:var(--green-border);color:var(--green);}
+  .filter-btn.active-bear{background:var(--red-bg);border-color:var(--red-border);color:var(--red);}
+  .sort-select{margin-left:auto;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--muted);font-family:var(--mono);font-size:11px;padding:5px 10px;cursor:pointer;outline:none;}
+  .sort-select:focus{border-color:var(--accent);}
+
+  .table-wrap{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;min-width:1000px;}
+  thead th{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);padding:10px 10px;text-align:left;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;white-space:nowrap;transition:color 0.15s;}
+  thead th:hover{color:var(--muted);}
+  thead th.r{text-align:right;}
+  thead th.c{text-align:center;}
+  /* Highlight B and L column headers */
+  thead th.b-col{text-align:center;color:var(--green);border-bottom:2px solid var(--green-border);}
+  thead th.l-col{text-align:center;color:var(--amber);border-bottom:2px solid var(--amber-border);}
+  tbody tr{border-bottom:1px solid var(--border);transition:background 0.1s;}
+  tbody tr:hover{background:var(--bg2);}
+  td{padding:10px 10px;vertical-align:middle;white-space:nowrap;}
+  td.r{text-align:right;}
+  td.c{text-align:center;}
+
+  .ticker-sym{font-family:var(--mono);font-weight:600;font-size:13px;color:var(--text);}
+  .ticker-name{font-size:11px;color:var(--muted);margin-top:1px;}
+  .price-val{font-family:var(--mono);font-size:13px;font-weight:500;}
+  .chg-pos{color:var(--green);font-family:var(--mono);font-size:12px;}
+  .chg-neg{color:var(--red);font-family:var(--mono);font-size:12px;}
+  .chg-neu{color:var(--muted);font-family:var(--mono);font-size:12px;}
+
+  /* Main sentiment badge */
+  .badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:4px;border:1px solid;}
+  .badge-bull{background:var(--green-bg);border-color:var(--green-border);color:var(--green);}
+  .badge-bear{background:var(--red-bg);border-color:var(--red-border);color:var(--red);}
+  .badge-neut{background:var(--bg3);border-color:var(--border);color:var(--muted);}
+
+  /* B column — momentum trend signal (price vs SMMA20) */
+  .b-bull{font-family:var(--mono);font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;border:1px solid var(--green-border);background:var(--green-bg);color:var(--green);letter-spacing:0.05em;display:inline-block;}
+  .b-bear{font-family:var(--mono);font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;border:1px solid var(--red-border);background:var(--red-bg);color:var(--red);letter-spacing:0.05em;display:inline-block;}
+  .b-neut{font-family:var(--mono);font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);letter-spacing:0.05em;display:inline-block;}
+
+  /* L column — dual SMMA trend signal (SMMA15 vs SMMA29) */
+  .l-gold{font-family:var(--mono);font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;border:1px solid var(--amber-border);background:var(--amber-bg);color:var(--amber);letter-spacing:0.05em;display:inline-block;}
+  .l-blue{font-family:var(--mono);font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;border:1px solid var(--blue-border);background:var(--blue-bg);color:var(--blue);letter-spacing:0.05em;display:inline-block;}
+  .l-gray{font-family:var(--mono);font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);letter-spacing:0.05em;display:inline-block;}
+
+  .w52-bar{display:flex;align-items:center;gap:6px;justify-content:flex-end;}
+  .w52-track{width:54px;height:3px;background:var(--bg3);border-radius:2px;overflow:hidden;flex-shrink:0;}
+  .w52-fill{height:100%;border-radius:2px;}
+  .w52-pct{font-family:var(--mono);font-size:10px;color:var(--muted);min-width:26px;}
+  .vol-text{font-family:var(--mono);font-size:11px;color:var(--dim);}
+  .sig-text{font-size:11px;color:var(--muted);max-width:130px;overflow:hidden;text-overflow:ellipsis;}
+  .flip-time{display:block;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:0.03em;}
+  .flip-time.new{color:var(--amber);font-weight:500;}
+
+
+  /* Tooltip on column headers */
+  .has-tip{position:relative;}
+  .has-tip::after{content:attr(data-tip);position:absolute;bottom:130%;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:var(--sans);font-size:11px;font-weight:400;text-transform:none;letter-spacing:0;padding:6px 10px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity 0.15s;z-index:20;min-width:220px;text-align:center;}
+  .has-tip:hover::after{opacity:1;}
+
+  .state-row td{text-align:center;padding:48px;color:var(--muted);font-family:var(--mono);font-size:12px;}
+
+  .setup-notice{background:var(--blue-bg);border:1px solid var(--blue-border);border-radius:10px;padding:20px 24px;margin:20px 0 0;font-size:13px;color:#93c5fd;line-height:1.7;}
+  .setup-notice strong{color:var(--text);font-weight:500;}
+  .setup-notice a{color:var(--accent);text-decoration:none;}
+  .setup-notice a:hover{text-decoration:underline;}
+  .setup-notice code{font-family:var(--mono);font-size:11px;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;color:var(--accent);}
+  ol{padding-left:20px;margin-top:8px;}
+  ol li{margin:4px 0;}
+
+  .refresh-ring{width:28px;height:28px;flex-shrink:0;}
+  .refresh-ring svg{transform:rotate(-90deg);}
+  .refresh-ring circle{fill:none;stroke:var(--border);stroke-width:2;}
+  .refresh-ring .prog{stroke:var(--accent);stroke-dasharray:69.1;stroke-dashoffset:69.1;transition:stroke-dashoffset 1s linear;stroke-linecap:round;}
+
+  footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--border);font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:0.05em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+
+  @media(max-width:640px){h1{font-size:20px;}.api-setup{flex-wrap:wrap;}.api-setup input{width:100%;}header{flex-direction:column;align-items:flex-start;}}
+</style>
 </head>
-<body class="bg-white text-slate-900 font-sans antialiased">
+<body>
+<div class="container">
 
-    <header class="sticky top-0 z-50 bg-brand-dark/95 backdrop-blur-md border-b border-slate-800 text-white">
-        <div class="max-w-7xl mx-auto px-6 h-22 flex justify-between items-center py-4">
-            
-            <div class="flex items-center space-x-4 cursor-pointer">
-                <svg class="w-9 h-9 text-brand-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <circle cx="12" cy="12" r="1" fill="#D4AF37" stroke="none" />
-                </svg>
-                <div class="flex flex-col">
-                    <span class="text-xl font-black tracking-[0.25em] leading-none text-white">IT SPACE</span>
-                    <span class="text-[9px] font-mono tracking-[0.38em] text-brand-gold uppercase mt-1.5 block">STOCKHOLM AB</span>
-                </div>
-            </div>
-            
-            <nav class="hidden lg:flex items-center space-x-10 text-xs font-semibold tracking-widest uppercase">
-                <a href="#philosophy" class="text-slate-300 hover:text-brand-gold transition">The Practice</a>
-                <a href="#capabilities" class="text-slate-300 hover:text-brand-gold transition">Capabilities</a>
-                <a href="#portfolio" class="text-slate-300 hover:text-brand-gold transition">Client Portfolio</a>
-                <a href="#engage" class="border border-brand-accent bg-brand-accent/10 px-6 py-3 text-sm text-white hover:bg-brand-accent transition-all duration-300">
-                    Engage Services
-                </a>
-            </nav>
+  <header>
+    <div class="header-left">
+      <div class="logo">▸ Market Terminal</div>
+      <h1>NQ<span>30</span> Watchlist</h1>
+      <div class="header-meta">Nasdaq 100 · Top 30 · Powered by Supabase</div>
+    </div>
+    <div class="header-right">
+      <button class="btn-refresh" id="refreshBtn" onclick="loadFromSupabase()">
+        <span id="refreshIcon">↻</span> Refresh
+      </button>
+    </div>
+  </header>
+
+  <div class="status-bar">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusText">Loading data from database…</span>
+    <span style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+      <span id="countdown"></span>
+      <div class="refresh-ring" id="refreshRing" style="display:none">
+        <svg width="28" height="28" viewBox="0 0 28 28">
+          <circle cx="14" cy="14" r="11"/>
+          <circle class="prog" id="ringProg" cx="14" cy="14" r="11"/>
+        </svg>
+      </div>
+    </span>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-group">
+      <span class="legend-title">B:</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>Bullish — price above SMMA20</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--red)"></span>Bearish — price below SMMA20</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--dim)"></span>Neutral</span>
+    </div>
+    <div class="legend-group">
+      <span class="legend-title">L:</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--amber)"></span>Gold — SMMA15 &gt; SMMA29 (uptrend)</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>Blue — SMMA15 &lt; SMMA29 (downtrend)</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--dim)"></span>Gray — crossing</span>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="summary">
+    <div class="sum-card green">
+      <div class="sum-label">Bullish</div>
+      <div class="sum-val green" id="sBull">—</div>
+      <div class="sum-sub">stocks</div>
+    </div>
+    <div class="sum-card red">
+      <div class="sum-label">Bearish</div>
+      <div class="sum-val red" id="sBear">—</div>
+      <div class="sum-sub">stocks</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-label">Neutral</div>
+      <div class="sum-val amber" id="sNeut">—</div>
+      <div class="sum-sub">stocks</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-label">Avg Move</div>
+      <div class="sum-val" id="sAvg">—</div>
+      <div class="sum-sub">today</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-label">B: Gold</div>
+      <div class="sum-val amber" id="sLGold">—</div>
+      <div class="sum-sub">L Gold</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-label">Top Gainer</div>
+      <div class="sum-val green" id="sLeader" style="font-size:13px;padding-top:4px;">—</div>
+      <div class="sum-sub">today</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-label">Top Loser</div>
+      <div class="sum-val red" id="sLaggard" style="font-size:13px;padding-top:4px;">—</div>
+      <div class="sum-sub">today</div>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <button class="filter-btn active" onclick="setFilter('all',this)">All 30</button>
+    <button class="filter-btn" onclick="setFilter('bull',this)">▲ Bullish</button>
+    <button class="filter-btn" onclick="setFilter('bear',this)">▼ Bearish</button>
+    <button class="filter-btn" onclick="setFilter('neutral',this)">◆ Neutral</button>
+    <button class="filter-btn" onclick="setFilter('lgold',this)" style="border-color:var(--amber-border);color:var(--amber);">★ L:Gold</button>
+    <button class="filter-btn" onclick="setFilter('lblue',this)" style="border-color:var(--blue-border);color:var(--blue);">● L:Blue</button>
+    <select class="sort-select" id="tfSelect" onchange="setTF(this.value)" style="margin-left:0; border-color:var(--accent); color:var(--accent);">
+      <option value="D">Timeframe: Daily</option>
+      <option value="4H">Timeframe: 4H</option>
+      <option value="W">Timeframe: Weekly</option>
+      <option value="M">Timeframe: Monthly</option>
+    </select>
+    <select class="sort-select" onchange="setSort(this.value)">
+      <option value="">Sort: Default</option>
+      <option value="chg_d">% Change ↓</option>
+      <option value="chg_a">% Change ↑</option>
+      <option value="price_d">Price ↓</option>
+      <option value="price_a">Price ↑</option>
+      <option value="az">Ticker A–Z</option>
+      <option value="mktcap_d">Mkt Cap ↓</option>
+    </select>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th onclick="setSort('az')">Ticker</th>
+          <th class="r" onclick="setSort('price_d')">Price</th>
+          <th class="r" onclick="setSort('chg_d')">Chg</th>
+          <th class="r" onclick="setSort('chg_d')">% Chg</th>
+          <th class="r">52W</th>
+          <th class="r" onclick="setSort('mktcap_d')">Mkt Cap</th>
+          <th class="c">Trend</th>
+          <th class="c b-col has-tip" data-tip="B = Momentum signal. Bullish = price above SMMA20. Bearish = price below SMMA20.">B</th>
+          <th class="c" style="font-size:10px;color:var(--green);border-bottom:2px solid var(--green-border);" data-tip="When the B signal last flipped (CET)">B Flip</th>
+          <th class="c l-col has-tip" data-tip="L = Trend signal. Gold = SMMA15 above SMMA29 (uptrend). Blue = SMMA15 below SMMA29 (downtrend).">L</th>
+          <th class="c" style="font-size:10px;color:var(--amber);border-bottom:2px solid var(--amber-border);" data-tip="When the L signal last flipped (CET)">L Flip</th>
+          <th class="r">Volume</th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr class="state-row"><td colspan="12">Loading data from database…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    <span>NQ30 WATCHLIST · POWERED BY SUPABASE + YAHOO FINANCE</span>
+    <span>DATA UPDATES EVERY 30 MIN · NOT FINANCIAL ADVICE</span>
+  </footer>
+</div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+const SUPABASE_URL  = 'https://ixcwtfrelsyjjiribpeo.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4Y3d0ZnJlbHN5amppcmlicGVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0Mjk4MzMsImV4cCI6MjA5NTAwNTgzM30.KvvGWXbI91uH7PA-Nbj33BRqEUziXkt1el2a5ihf9Zg';
+const REFRESH_INTERVAL = 30; // seconds between Supabase reads
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let allData    = [];
+let curFilter  = 'all';
+let curSort    = '';
+let curTF      = 'D';
+let countdownTimer = null;
+let secondsLeft    = 0;
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => { loadFromSupabase(); });
+
+// ── SUPABASE READ ─────────────────────────────────────────────────────────────
+async function loadFromSupabase() {
+  setStatus('loading', 'Reading from database…');
+  const btn  = document.getElementById('refreshBtn');
+  const icon = document.getElementById('refreshIcon');
+  btn.disabled = true;
+  icon.classList.add('spin');
+  clearTimers();
+
+  try {
+    // Two simple queries — no foreign key join needed
+    const headers = {
+      'apikey':        SUPABASE_ANON,
+      'Authorization': `Bearer ${SUPABASE_ANON}`,
+      'Accept':        'application/json',
+    };
+
+    const [priceRes, flipRes] = await Promise.all([
+      fetch(`${SUPABASE_URL}/rest/v1/price_data?select=*`, { headers }),
+      fetch(`${SUPABASE_URL}/rest/v1/flip_history?select=*`, { headers }),
+    ]);
+
+    if (!priceRes.ok) throw new Error(`Supabase HTTP ${priceRes.status}`);
+    if (!flipRes.ok)  throw new Error(`Flip history HTTP ${flipRes.status}`);
+
+    const rows     = await priceRes.json();
+    const flipRows = await flipRes.json();
+
+    if (!rows.length) {
+      setStatus('error', 'No data yet — Edge Function may still be running. Try refreshing in a minute.');
+      return;
+    }
+
+    // Build flip lookup map
+    const flipMap = {};
+    flipRows.forEach(f => { flipMap[f.sym] = f; });
+
+    allData = rows.map(r => ({
+      sym:      r.sym,
+      name:     r.name,
+      price:    r.price,
+      chg:      r.chg,
+      chgPct:   r.chg_pct,
+      hi52:     r.hi52,
+      lo52:     r.lo52,
+      vol:      r.vol,
+      mktCapB:  r.mkt_cap_b,
+      bFlipTime: flipMap[r.sym]?.b_flip_time ?? null,
+      lFlipTime: flipMap[r.sym]?.l_flip_time ?? null,
+      tf: {
+        '4H': { b: r.b_4h, l: r.l_4h },
+        'D':  { b: r.b_d,  l: r.l_d  },
+        'W':  { b: r.b_w,  l: r.l_w  },
+        'M':  { b: r.b_m,  l: r.l_m  },
+      },
+      sentiment: r.b_d === 'bull' ? 'bull' : r.b_d === 'bear' ? 'bear' : 'neutral',
+      bSignal:   r.b_d,
+      lSignal:   r.l_d,
+    }));
+
+    render();
+    renderSummary();
+    const updated = new Date(rows[0]?.updated_at);
+    const cetStr  = updated.toLocaleString('en-GB', {
+      timeZone:'Europe/Stockholm', hour:'2-digit', minute:'2-digit', second:'2-digit'
+    });
+    setStatus('live', `Live · Data as of ${cetStr} CET · ${allData.length}/30 loaded`);
+    startCountdown();
+
+  } catch(e) {
+    setStatus('error', 'Failed to load: ' + e.message);
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+    icon.classList.remove('spin');
+  }
+}
+
+// ── RENDER TABLE ──────────────────────────────────────────────────────────────
+function render() {
+  let rows = [...allData];
+
+  // Filter
+  if (curFilter === 'bull')   rows = rows.filter(r => r.sentiment === 'bull');
+  else if (curFilter === 'bear')   rows = rows.filter(r => r.sentiment === 'bear');
+  else if (curFilter === 'neutral') rows = rows.filter(r => r.sentiment === 'neutral');
+  else if (curFilter === 'lgold') rows = rows.filter(r => r.lSignal === 'gold');
+  else if (curFilter === 'lblue') rows = rows.filter(r => r.lSignal === 'blue');
+
+  // Sort
+  if (curSort === 'chg_d')     rows.sort((a,b) => (b.chgPct||0)-(a.chgPct||0));
+  else if (curSort === 'chg_a')    rows.sort((a,b) => (a.chgPct||0)-(b.chgPct||0));
+  else if (curSort === 'price_d')  rows.sort((a,b) => (b.price||0)-(a.price||0));
+  else if (curSort === 'price_a')  rows.sort((a,b) => (a.price||0)-(b.price||0));
+  else if (curSort === 'az')       rows.sort((a,b) => a.sym.localeCompare(b.sym));
+  else if (curSort === 'mktcap_d') rows.sort((a,b) => (b.mktCapB||0)-(a.mktCapB||0));
+
+  const tbody = document.getElementById('tbody');
+  if (!rows.length) {
+    tbody.innerHTML = `<tr class="state-row"><td colspan="12">No stocks match this filter.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = rows.map(r => {
+    const tf       = r.tf || {};
+    const activeTF = tf[curTF] || {b:'neutral', l:'gray'};
+    const bSig     = activeTF.b || 'neutral';
+    const lSig     = activeTF.l || 'gray';
+
+    const bCls   = bSig==='bull'?'b-bull':bSig==='bear'?'b-bear':'b-neut';
+    const bLabel = bSig==='bull'?'Bullish':bSig==='bear'?'Bearish':'Neutral';
+    const lCls   = lSig==='gold'?'l-gold':lSig==='blue'?'l-blue':'l-gray';
+    const lLabel = lSig==='gold'?'Gold':lSig==='blue'?'Blue':'Gray';
+
+    const pc = r.chgPct > 0.05 ? 'chg-pos' : r.chgPct < -0.05 ? 'chg-neg' : 'chg-neu';
+    const priceFmt = r.price >= 1000
+      ? '$'+r.price.toLocaleString('en-US',{maximumFractionDigits:0})
+      : '$'+Number(r.price).toFixed(2);
+    const chgSign = r.chg >= 0 ? '+' : '';
+    const pctSign = r.chgPct >= 0 ? '+' : '';
+
+    const pos52 = (r.hi52 && r.lo52 && r.hi52>r.lo52)
+      ? Math.max(0,Math.min(1,(r.price-r.lo52)/(r.hi52-r.lo52))) : 0.5;
+    const barColor = pos52>0.7?'var(--green)':pos52<0.3?'var(--red)':'var(--accent)';
+    const mktFmt   = r.mktCapB>=1000?(r.mktCapB/1000).toFixed(1)+'T':r.mktCapB+'B';
+    const volFmt   = !r.vol?'—':r.vol>=1e9?(r.vol/1e9).toFixed(1)+'B'
+      :r.vol>=1e6?(r.vol/1e6).toFixed(1)+'M':(r.vol/1e3).toFixed(0)+'K';
+
+    const sent = r.sentiment;
+    const badgeCls   = sent==='bull'?'badge-bull':sent==='bear'?'badge-bear':'badge-neut';
+    const badgeLabel  = sent==='bull'?'▲ BULL':sent==='bear'?'▼ BEAR':'◆ NEUT';
+
+    const flipCell = (t) => t
+      ? `<span class="flip-time" style="font-size:11px;">${t}</span>`
+      : `<span style="color:var(--dim);font-family:var(--mono);font-size:11px;">—</span>`;
+
+    return `<tr>
+      <td><div class="ticker-sym">${r.sym}</div><div class="ticker-name">${r.name}</div></td>
+      <td class="r"><span class="price-val">${priceFmt}</span></td>
+      <td class="r"><span class="${pc}">${chgSign}${Number(r.chg).toFixed(2)}</span></td>
+      <td class="r"><span class="${pc}">${pctSign}${Number(r.chgPct).toFixed(2)}%</span></td>
+      <td class="r">
+        <div class="w52-bar">
+          <span class="w52-pct">${Math.round(pos52*100)}%</span>
+          <div class="w52-track"><div class="w52-fill" style="width:${Math.round(pos52*100)}%;background:${barColor}"></div></div>
         </div>
-    </header>
+      </td>
+      <td class="r" style="color:var(--muted);font-family:var(--mono);font-size:12px;">${mktFmt}</td>
+      <td class="c"><span class="badge ${badgeCls}">${badgeLabel}</span></td>
+      <td class="c"><span class="${bCls}">${bLabel}</span></td>
+      <td class="c">${flipCell(r.bFlipTime)}</td>
+      <td class="c"><span class="${lCls}">${lLabel}</span></td>
+      <td class="c">${flipCell(r.lFlipTime)}</td>
+      <td class="r"><span class="vol-text">${volFmt}</span></td>
+    </tr>`;
+  }).join('');
+}
 
-    <section class="enterprise-grid text-white py-32 px-6 lg:py-44 relative">
-        <div class="max-w-6xl mx-auto relative z-20">
-            <span class="text-xs font-mono tracking-widest text-brand-gold uppercase block mb-4">// EXPERT IMPLEMENTATION PARTNER</span>
-            <h1 class="text-4xl md:text-6xl lg:text-7xl font-light tracking-tight leading-[1.1] mb-8 max-w-5xl">
-                Securing execution. <br>
-                <span class="font-serif italic font-normal text-slate-300">Eliminating operational risk.</span>
-            </h1>
-            <p class="text-lg md:text-xl text-slate-400 max-w-3xl mb-12 font-light leading-relaxed">
-                With more than 20 years of successful implementations across Europe, we help companies and organizations deploy complex IT projects efficiently, safely, and entirely within budget parameters.
-            </p>
-            <div class="flex flex-wrap gap-6">
-                <a href="#capabilities" class="bg-brand-accent text-white text-xs font-semibold tracking-widest uppercase px-8 py-4 hover:bg-blue-700 transition shadow-lg flex items-center gap-3">
-                    Our Capabilities
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
-                </a>
-                <a href="#portfolio" class="border border-slate-700 text-white text-xs font-semibold tracking-widest uppercase px-8 py-4 hover:border-white transition">
-                    Proven Track Record
-                </a>
-            </div>
-        </div>
-    </section>
+// ── SUMMARY CARDS ─────────────────────────────────────────────────────────────
+function renderSummary() {
+  const bull  = allData.filter(r=>r.sentiment==='bull').length;
+  const bear  = allData.filter(r=>r.sentiment==='bear').length;
+  const neut  = allData.filter(r=>r.sentiment==='neutral').length;
+  const lgold = allData.filter(r=>r.lSignal==='gold').length;
+  const avg   = allData.length ? allData.reduce((a,r)=>a+(r.chgPct||0),0)/allData.length : 0;
+  const leader  = [...allData].sort((a,b)=>b.chgPct-a.chgPct)[0];
+  const laggard = [...allData].sort((a,b)=>a.chgPct-b.chgPct)[0];
 
-    <section id="philosophy" class="py-24 px-6 bg-white border-b border-gray-100">
-        <div class="max-w-7xl mx-auto grid md:grid-cols-12 gap-12 items-center">
-            
-            <div class="md:col-span-7">
-                <span class="text-xs font-bold font-mono tracking-widest text-brand-accent uppercase block mb-4">The Imperative</span>
-                <blockquote class="font-serif text-2xl md:text-4xl text-slate-800 leading-snug mb-8">
-                    “An investment in our execution model is a highly structured, uncomplicated decision. We deliver premium, effective solutions directly to the pain points of your architecture—safeguarding your time and eliminating project stress.”
-                </blockquote>
-                <div class="flex items-center space-x-4">
-                    <div class="h-[1px] w-12 bg-brand-gold"></div>
-                    <p class="text-sm font-semibold tracking-wide text-slate-600">
-                        Erik van Geest — <span class="font-light">IT Space Stockholm AB</span>
-                    </p>
-                </div>
-            </div>
+  document.getElementById('sBull').textContent    = bull;
+  document.getElementById('sBear').textContent    = bear;
+  document.getElementById('sNeut').textContent    = neut;
+  document.getElementById('sLGold').textContent   = lgold;
+  const avgEl = document.getElementById('sAvg');
+  avgEl.textContent = (avg>=0?'+':'')+avg.toFixed(2)+'%';
+  avgEl.className   = 'sum-val '+(avg>0?'green':avg<0?'red':'amber');
+  document.getElementById('sLeader').textContent  = leader  ?`${leader.sym} +${Number(leader.chgPct).toFixed(2)}%`:'—';
+  document.getElementById('sLaggard').textContent = laggard ?`${laggard.sym} ${Number(laggard.chgPct).toFixed(2)}%`:'—';
+}
 
-            <div class="md:col-span-5">
-                <div class="relative overflow-hidden rounded-sm shadow-2xl bg-slate-100 aspect-[4/3] w-full">
-                    <img src="https://images.unsplash.com/photo-1606857521015-7f9fcf423740?auto=format&fit=crop&w=800&q=80" 
-                         alt="Strategic corporate IT architectural advisory session" 
-                         class="w-full h-full object-cover filter grayscale contrast-125 hover:grayscale-0 transition-all duration-700">
-                    <div class="absolute inset-0 border border-black/10 pointer-events-none"></div>
-                </div>
-            </div>
+// ── CONTROLS ──────────────────────────────────────────────────────────────────
+function setFilter(f, el) {
+  curFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active','active-bull','active-bear'));
+  if (f==='bull') el.classList.add('active-bull');
+  else if (f==='bear') el.classList.add('active-bear');
+  else el.classList.add('active');
+  render();
+}
+function setSort(s)  { curSort = s; render(); }
+function setTF(tf)   { curTF = tf; render(); }
 
-        </div>
-    </section>
+// ── STATUS ────────────────────────────────────────────────────────────────────
+function setStatus(type, msg) {
+  document.getElementById('statusDot').className = 'status-dot'+(type==='live'?' live':type==='error'?' error':'');
+  document.getElementById('statusText').textContent = msg;
+}
 
-    <section id="capabilities" class="py-24 px-6 bg-slate-50">
-        <div class="max-w-7xl mx-auto">
-            <div class="mb-16">
-                <span class="text-xs font-bold font-mono tracking-widest text-brand-accent uppercase block mb-2">Capabilities</span>
-                <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-brand-slate">Core Pillars of Implementation</h2>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                
-                <div class="bg-white p-10 border border-gray-200 shadow-sm flex flex-col justify-between hover:border-brand-accent transition-all duration-300 group rounded-sm">
-                    <div>
-                        <div class="w-12 h-12 text-brand-accent mb-8 group-hover:text-brand-gold transition-colors">
-                            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75c.621 0 1.125.504 1.125 1.125v1.125c0 .621-.504 1.125-1.125 1.125H5.625D5.004 8 4.5 7.496V5.625c0-.621.504-1.125 1.125-1.125z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-bold tracking-tight mb-4">Targeted IT Project Management</h3>
-                        <p class="text-slate-600 text-sm leading-relaxed font-light">
-                            Specialized, full-lifecycle execution of corporate IT infrastructure. We ensure that systems fit your target operating vision cleanly, on time, and completely within your allocated cost metrics.
-                        </p>
-                    </div>
-                    <span class="text-xs font-mono text-slate-400 mt-8">01 / DISCIPLINED IMPLEMENTATION</span>
-                </div>
-
-                <div class="bg-white p-10 border border-gray-200 shadow-sm flex flex-col justify-between hover:border-brand-accent transition-all duration-300 group rounded-sm">
-                    <div>
-                        <div class="w-12 h-12 text-brand-accent mb-8 group-hover:text-brand-gold transition-colors">
-                            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-bold tracking-tight mb-4">Stress-Reducing Systems Architecture</h3>
-                        <p class="text-slate-600 text-sm leading-relaxed font-light">
-                            Turning complex corporate logic requirements into highly scannable, lightweight, and robust frameworks. Built to clear operational roadblocks and maximize internal team productivity.
-                        </p>
-                    </div>
-                    <span class="text-xs font-mono text-slate-400 mt-8">02 / OPERATIONAL PROTECTION</span>
-                </div>
-
-                <div class="bg-white p-10 border border-gray-200 shadow-sm flex flex-col justify-between hover:border-brand-accent transition-all duration-300 group rounded-sm">
-                    <div>
-                        <div class="w-12 h-12 text-brand-accent mb-8 group-hover:text-brand-gold transition-colors">
-                            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 2 12 2m0 19c-2.485 0-4.5-4.03-4.5-9S9.515 2 12 2m0 0a8.997 8.997 0 01
+// ── COUNTDOWN ─────────────────────────────────────────────────────────────────
+function startCountdown() {
+  secondsLeft = REFRESH_INTERVAL;
+  document.getElementById('refreshRing').style.display = 'block';
+  updateRing();
+  countdownTimer = setInterval(() => {
+    secondsLeft--;
+    updateRing();
+    if (secondsLeft <= 0) { clearTimers(); loadFromSupabase(); }
+  }, 1000);
+}
+function updateRing() {
+  document.getElementById('ringProg').style.strokeDashoffset =
+    69.1 - (69.1*(1-secondsLeft/REFRESH_INTERVAL));
+  const cd = document.getElementById('countdown');
+  cd.textContent = secondsLeft+'s';
+  cd.style.cssText = 'font-family:var(--mono);font-size:10px;color:var(--muted);';
+}
+function clearTimers() {
+  if (countdownTimer) clearInterval(countdownTimer);
+  document.getElementById('refreshRing').style.display = 'none';
+  document.getElementById('countdown').textContent = '';
+}
+</script>
+</body>
+</html>
+HTMLEOF
+echo "Done"
